@@ -11,13 +11,13 @@ BOOTSTRAP: False #Set this to true when you want to bootstrap the training from 
 TABLE_GEN: False  #Set this to true when you want to generate a new valid action table for a object size
 MODE: 2  # 0 -train 1- test 2- plot
 ACTION_TABLE_PATH: './Valid_action_table.txt'
-NETWORK_PATH: './checkpoint12.pth'
+NETWORK_PATH: './checkpoint11.pth'
 R_PLOT_PATH:  './Reward10.png'
 L_PLOT_PATH:   './Loss10.png'
 TENSORBOARD_PATH: './'
 
 #Environment parameters
-OBJECT_SIZE: 2.5
+OBJECT_SIZE: 3
 FINGER_START: 7.0
 FINGER_END: 11.0
 

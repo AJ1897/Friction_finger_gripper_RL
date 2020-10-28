@@ -621,8 +621,8 @@ if __name__ == '__main__':
         states=[]
         actions=[]
         start, goal = env.reset()
-        start = (7.9, 7.2, -90)
-        goal = (9.9, 7.2, 0)
+        start = (10, 7.2, -90)
+        goal = (8, 8, 0)
         c_state = np.concatenate((np.array(start), np.array(goal)))
 
         env.current_state = start
@@ -637,7 +637,7 @@ if __name__ == '__main__':
 
         n=0
         
-        while(not done and n<250):
+        while(not done and n<1000):
 
             n =n+1
             # state = torch.from_numpy(c_state).float().unsqueeze(0)
