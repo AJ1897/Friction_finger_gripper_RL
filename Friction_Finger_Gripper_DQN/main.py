@@ -636,7 +636,7 @@ if __name__ == '__main__':
 
         n=0
         
-        while(not done and n<150):
+        while(not done and n<30):
 
             n =n+1
             # state = torch.from_numpy(c_state).float().unsqueeze(0)
