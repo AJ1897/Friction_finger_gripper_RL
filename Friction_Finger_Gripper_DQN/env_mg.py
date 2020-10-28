@@ -221,13 +221,13 @@ class Friction_finger_env:
 
 
     def calculate_action_table(self):
+        print("Generating Action Table")
         action_table=dict()
         i=self.finger_low_limit
         while(i<=self.finger_high_limit):
             j=self.finger_low_limit
             while (j <= self.finger_high_limit):
                 for theta in self.valid_theta:
-
                     s=(i,j,theta)
                     print(s)
                     action=[]
@@ -244,28 +244,45 @@ class Friction_finger_env:
 
 
     def calculate_next_state(self,action):
-        if 1:
+        if self.current_state[0]>=self.finger_low_limit and self.current_state[0]<=self.finger_high_limit and self.current_state[1]>=self.finger_low_limit and self.current_state[1]<=self.finger_high_limit:
 
-            if action in self.valid_Actions[str(self.current_state)]:
-            # if 1:
+            #if action in self.valid_Actions[str(self.current_state)]:
+            if 1:
+               # if action == 0:
+                #    return(round(self.current_state[0]+0.1,10),round(self.current_state[1],10),self.current_state[2])
+
+                #elif action == 1:
+                 #   return(round(self.current_state[0]-0.1,10),round(self.current_state[1],10),self.current_state[2])
+
+               # elif action == 2:
+                #    return(round(self.current_state[0],10),round(self.current_state[1]+0.1,10),self.current_state[2])
+
+               # elif action == 3:
+                #    return(round(self.current_state[0],10),round(self.current_state[1]-0.1,10),self.current_state[2])
+
+               # elif action == 4:
+               #     return(round(self.current_state[0]+self.object_size,10),round(self.current_state[1]-self.object_size,10),self.current_state[2]+90)
+
+                #elif action == 5:
+                #    return(round(self.current_state[0]-self.object_size,10),round(self.current_state[1]+self.object_size,10),self.current_state[2]-90)
                 if action == 0:
                     #print("Action 0 called")
-                    return(round(self.current_state[0]+0.1,10),round(self.current_state[1],10),self.current_state[2])
+                    return(round(self.current_state[0]+0.1+np.random.normal(0,0.1),10),round(self.current_state[1],10),self.current_state[2])
 
                 elif action == 1:
-                    return(round(self.current_state[0]-0.1,10),round(self.current_state[1],10),self.current_state[2])
+                    return(round(self.current_state[0]-0.1+np.random.normal(0,0.1),10),round(self.current_state[1],10),self.current_state[2])
 
                 elif action == 2:
-                    return(round(self.current_state[0],10),round(self.current_state[1]+0.1,10),self.current_state[2])
+                    return(round(self.current_state[0],10),round(self.current_state[1]+0.1+np.random.normal(0,0.1),10),self.current_state[2])
 
                 elif action == 3:
-                    return(round(self.current_state[0],10),round(self.current_state[1]-0.1,10),self.current_state[2])
+                    return(round(self.current_state[0],10),round(self.current_state[1]-0.1+np.random.normal(0,0.1),10),self.current_state[2])
 
                 elif action == 4:
-                    return(round(self.current_state[0]+self.object_size,10),round(self.current_state[1]-self.object_size,10),self.current_state[2]+90)
+                    return(round(self.current_state[0]+self.object_size+np.random.normal(0,0.1),10),round(self.current_state[1]-self.object_size+np.random.normal(0,0.1),10),self.current_state[2]+90)
 
                 elif action == 5:
-                    return(round(self.current_state[0]-self.object_size,10),round(self.current_state[1]+self.object_size,10),self.current_state[2]-90)
+                    return(round(self.current_state[0]-self.object_size+np.random.normal(0,0.1),10),round(self.current_state[1]+self.object_size+np.random.normal(0,0.1),10),self.current_state[2]-90)
             else:
                 #print("not valid action")
                 return self.current_state
@@ -306,6 +323,8 @@ class Friction_finger_env:
         #print("start=",self.start_state)
         self.goal=  (random.randint(self.finger_low_limit*10,self.finger_high_limit*10)/10.0,random.randint(self.finger_low_limit*10,self.finger_high_limit*10)/10.0,random.choice(self.valid_theta))
         # self.goal = (9.0,9.0,-90)
+        if(self.start_state==self.goal):
+            return self.reset()
         return self.current_state,self.goal
 
     def step(self,action):

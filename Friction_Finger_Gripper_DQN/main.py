@@ -1,3 +1,4 @@
+
 import sys
 import random
 import torch
@@ -377,11 +378,11 @@ def plot(L,R,theta,A):
 
 
         # function to show the plot
-        Filename='Test_results/data'+'.png'
-        plt.show()
-        # plt.savefig(Filename)
-        plt.clf()
-        plt.close()
+        Filename='./Test_results.png'
+        #plt.show()
+        plt.savefig(Filename)
+        #plt.clf()
+        #plt.close()
 
 def linearly_decaying_epsilon(decay_period, step, warmup_steps, epsilon):
   """Returns the current epsilon for the agent's epsilon-greedy policy.
@@ -419,9 +420,6 @@ def identity_epsilon(unused_decay_period, unused_step, unused_warmup_steps,
 
 
 if __name__ == '__main__':
-    global OBJECT_SIZE
-    global FINGER_START
-    global FINGER_END
     # parser=argparse.ArgumentParser()
     # parser.add_argument("params",type=str,help="Input path to hyperparameters file")
     # parser.add_argument("-v","--verbose", action="store_true", help="increase output verbosity")
@@ -438,10 +436,10 @@ if __name__ == '__main__':
     
     options=['TRAIN', 'TEST', 'PLOT']
     command= param_list['MODE']
-    command= 2
+    #command= 0
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print(device)
+    print(device, "Command = ",command)
     if(command==0):
         writer = SummaryWriter(param_list['TENSORBOARD_PATH'])
 
@@ -476,12 +474,11 @@ if __name__ == '__main__':
         FUTURE_K=param_list['FUTURE_K']
         
         ep_count=0
-        
+        print("#"*50 + "TRAINING BEGINS" + "#"*50)        
         for epoch in range(TOTAL_EPOCHS):
             epsilon = max(EPSILON_MAX - epoch * (EPSILON_MAX - EPSILON_MIN) / int(TOTAL_EPOCHS * EXP_FACTOR), EPSILON_MIN)
             # lr = max(LR_MAX - epoch * (LR_MAX - LR_MIN) / int(TOTAL_EPOCHS * EXP_FACTOR_LR), LR_MIN)
             #print("Epoch: {}, exploration: {:.0f}%, success rate: {:.2f}".format(epoch + 1, 100 * epsilon, success_rate))
-
             successes = 0
             step_count=0
             for cycle in range(NUM_CYCLES):
@@ -489,7 +486,7 @@ if __name__ == '__main__':
                     state,goal =env.reset()
                     state = np.array(state)
                     goal=np.array(goal)
-                    print('start',state,'goal',goal,'eps',epsilon,'epoch',epoch,'cycle',cycle,'episode',episode)
+                   # print('start',state,'goal',goal,'eps',epsilon,'epoch',epoch,'cycle',cycle,'episode',episode)
                     sum_reward=0
 
                     for step in range(MAX_STEPS):
@@ -504,7 +501,7 @@ if __name__ == '__main__':
                         sum_reward+=reward
                         # writer.add_scalar('loss/train', agent.Q_loss,training_steps)
                         if done:
-                            print("Reached goal in ", step, "steps")
+                           # print("Reached goal in ", step, "steps")
                             successes+=1
                             cum_reward.append(sum_reward)
                             break
@@ -512,13 +509,12 @@ if __name__ == '__main__':
                     ep_count+=1
                    
                     # writer.add_scalar('reward/train', sum_reward, ep_count)
-                    #
                     # writer.add_histogram('Weights1layer/train',agent.qnetwork_local.fc1.weight.data, ep_count )
                     # writer.add_histogram('Weights2layer/train',agent.qnetwork_local.fc2.weight.data, ep_count )
                     avg_rewards.append(sum_reward)
                     cum_avg_rewards.append(np.mean(avg_rewards))
-               
-            # writer.add_scalar('SuccessPerEpoch/train',successes/50.0, epoch)
+            print("Epoch = %d, SuccessPerEpoch = %0.2f, Epsilon = %0.4f"%(epoch,(successes*100)/step_count, epsilon))   
+            #writer.add_scalar('SuccessPerEpoch/train',successes/50.0, epoch)
             # writer.add_scalar('Avg_steps/train',step_count/50.0, epoch)
 		
 
@@ -538,7 +534,7 @@ if __name__ == '__main__':
         obj_size_list=[]
         FINGER_START=param_list['FINGER_START']
         FINGER_END=param_list['FINGER_END']
-        for i in range(5,21,1):
+        for i in range(5,26,1):
           OBJECT_SIZE=i/10.0
           obj_size_list.append(OBJECT_SIZE)
 
@@ -587,10 +583,10 @@ if __name__ == '__main__':
                   print("Goal not reached","Episode_number=",i,"Success_rate=",success*100/i)
           completion_rate.append(success*100/i)
         plt.plot(obj_size_list,completion_rate)
+        print(list([str(ob_size) + ": "+str(comp_rate)] for ob_size,comp_rate in list(zip(obj_size_list,completion_rate))))
 
 
     elif(command==2):
-        global X,Y
         FINGER_START=param_list['FINGER_START']
         FINGER_END=param_list['FINGER_END']
         OBJECt_SIZE=param_list['OBJECT_SIZE']
@@ -661,7 +657,7 @@ if __name__ == '__main__':
         L = []
         R = []
         thetas = calculate_theta(states, actions)
-        print(len(states))
+        print("Number of States: %d"%len(states))
 
        
         
@@ -669,14 +665,15 @@ if __name__ == '__main__':
         for state in states:
             L.append(state[0])
             R.append(state[1])
-            # print (state)
-
+            print("State 1 = %s, State 2 = %s "%(state[0],state[1]))
         plot(L, R, thetas, actions)
 
         with open('./PLOTS/Path.txt', 'w') as filehandle:
         # filehandle.writelines("start=%s\n"% str(start))
         # filehandle.writelines("goal=%s\n"% str(goal))
-          filehandle.writelines("%s\n" % str([state[0], state[1], action, theta[0], theta[1]]) for state,action,theta in zip(states,actions,thetas))
+            print("Printing Values: ")
+            print("%s"%str([state[0], state[1], action, theta[0], theta[1]]) for state,action,theta in zip(states,actions,thetas))
+            filehandle.writelines("%s\n" % str([state[0], state[1], action, theta[0], theta[1]]) for state,action,theta in zip(states,actions,thetas))
         # print(X)
         # for state,action,x,y in zip(states,actions,X,Y):
         #    print( str([state[0], state[1], action, x, y]) )
