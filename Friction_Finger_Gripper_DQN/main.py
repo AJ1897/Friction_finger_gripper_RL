@@ -621,7 +621,7 @@ if __name__ == '__main__':
         actions=[]
         start, goal = env.reset()
         start = (7.9, 7.2, -90)
-        goal = (7.9, 7.2, 0)
+        goal = (10.9, 7.4, -90)
         c_state = np.concatenate((np.array(start), np.array(goal)))
 
         env.current_state = start
