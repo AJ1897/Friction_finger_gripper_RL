@@ -346,7 +346,7 @@ def plot(L,R,theta,A):
 
         # plotting the points
         plt.plot(X, Y,'b-',label='Sliding action')
-
+	print("Count = ",len(count))
         for j in range(len(count)):
 	    print("j = ",j)
             # print"*********************************************************************************88"
