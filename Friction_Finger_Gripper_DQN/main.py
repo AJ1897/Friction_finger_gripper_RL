@@ -348,6 +348,7 @@ def plot(L,R,theta,A):
         plt.plot(X, Y,'b-',label='Sliding action')
 
         for j in range(len(count)):
+	    print("j = ",j)
             # print"*********************************************************************************88"
             # print X[count[j][0]:count[j][0] + count[j][1]], Y[count[j][0]:count[j][0] + count[j][1]]
             plt.plot(X[count[j][0]:count[j][0]+count[j][1]],Y[count[j][0]:count[j][0]+count[j][1]],'r',label='Rotation action')
